@@ -14,6 +14,7 @@ from transformers import AutoModelForQuestionAnswering
 
 from neural_compressor.config import PostTrainingQuantConfig
 
+### Quantization not working !!! BLEU scores are not straightforward to optimize for in optimum/neural compressor
 # The directory where the quantized model will be saved
 save_dir = "test-quant"
 

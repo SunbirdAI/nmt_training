@@ -11,6 +11,8 @@ from neural_compressor.config import PostTrainingQuantConfig
 
 from transformers import EarlyStoppingCallback
 
+
+### Quantization not working !!! BLEU scores are not straightforward to optimize for in optimum/neural compressor
 config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/' #FIXME use os.path.join
 config['model_checkpoint'] = "/home/ali/Documents/repos/nmt_checkpoints/mul_en_kaggle_hf_1-2/output-mul-en/checkpoint-400"
 tokenizer = transformers.AutoTokenizer.from_pretrained(config["model_checkpoint"])

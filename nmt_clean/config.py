@@ -24,7 +24,10 @@ config = {
     'back_translation_training_data': False,
     'front_translation_training_data': False, #not implemented
     'named_entities_training_data': False,
-    'recycle_language_tokens': True
+    'recycle_language_tokens': True,
+    'google_back_translation': True,
+    'oversample_rate': 5,
+    'oversample_in_domain': True
 }
 
 config['language_pair'] = f'salt-en'
@@ -202,6 +205,27 @@ if config['flores101_training_data']:
 # Over-sample the non-religious training text
 #config['training_subset_ids'] = config['training_subset_ids'] * 5
 # Will oversample from interleave datasets
+
+#if config['back_translation_training_data']:
+#     raise NotImplementedError("Have not split bt data by language yet")
+#     config['training_subset_ids'].append('back_translated')
+
+if config["google_back_translation"]:
+    google_bt = {
+        "source":{
+            "language":"lug",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.src"
+        },
+        "target":{
+            "language":"en",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.src"
+        }
+    }
+    config['training_subset_ids'].append(google_bt)
+
+if config["oversample_in_domain"]:
+    config['training_subset_ids'] = config['training_subset_ids'] * config["oversample_rate"]
+
 
 if config['mt560_training_data']:
     mt560_list = [

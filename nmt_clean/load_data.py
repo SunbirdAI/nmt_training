@@ -18,9 +18,9 @@ def load_training_data(processor, tokenizer):
 
 
     sample_probabilities = np.array([len(s) for s in training_subsets])
-    sample_probabilities[6:9] = sample_probabilities[6]//10 #downsample mt560 ach by a factor of 10
-    sample_probabilities[6:9] = sample_probabilities[6]//20 #downsample mt560 lug by a factor of 20
-    sample_probabilities[6:9] = sample_probabilities[6]//10 #downsample mt560 nyn by a factor of 10
+    #sample_probabilities[6:9] = sample_probabilities[6]//10 #downsample mt560 ach by a factor of 10
+    #sample_probabilities[6:9] = sample_probabilities[6]//20 #downsample mt560 lug by a factor of 20
+    #sample_probabilities[6:9] = sample_probabilities[6]//10 #downsample mt560 nyn by a factor of 10
 
     sample_probabilities = sample_probabilities / np.sum(sample_probabilities)
 
