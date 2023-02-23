@@ -37,10 +37,10 @@ config['wandb_entity'] = f'sunbird'
 config['model_checkpoint'] = f'/content/mBART_weights/best_mBART_salt'
 
 # What training data to use
-config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/'
-config['training_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
-config['validation_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
-config['test_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
+config['data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
+#config['training_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
+#config['validation_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
+#config['test_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 
 config['training_extra_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 
@@ -221,7 +221,7 @@ if config["google_back_translation"]:
             "path":config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.src"
         }
     }
-    config['trainingtraining_subset_paths_subset_ids'].append(google_bt)
+    config['training_subset_paths'].append(google_bt)
 
 if config["oversample_in_domain"]:
     config['training_subset_paths'] = config['training_subset_paths'] * config["oversample_rate"]

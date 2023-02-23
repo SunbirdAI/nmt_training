@@ -3,14 +3,19 @@ import numpy as np
 
 from nmt_clean.config import config 
 
-def load_training_data(processor, tokenizer):
-    training_subsets = processor.load_datasets(config['training_subset_paths'],
-                                            config["token_conversion_dict"],
+def load_training_data(processor, tokenizer,
+training_subset_paths = config['training_subset_paths'],
+token_conversion_dict = config["token_conversion_dict"],
+validation_train_merge = config["validation_train_merge"],
+validation_subset_paths = config["validation_subset_paths"],
+validation_samples_per_language = config["validation_samples_per_language"]):
+    training_subsets = processor.load_datasets(training_subset_paths,
+                                            token_conversion_dict,
                                             validation_cutoff = 0)
     if config["validation_train_merge"]: #WARNING: this will introduce an indirect leak because the validation set will be a temporary test set as well
-        extra_training_data = processor.load_datasets(config['validation_subset_paths'], 
-                                                config["token_conversion_dict"],
-                                                validation_cutoff = config['validation_samples_per_language'],
+        extra_training_data = processor.load_datasets(validation_subset_paths, 
+                                                token_conversion_dict,
+                                                validation_cutoff = validation_samples_per_language,
                                                 mode = "cutoff_minimum")
         training_subsets.extend(extra_training_data)
 
@@ -33,11 +38,14 @@ def load_training_data(processor, tokenizer):
 
     return train_data
 
-def load_validation_data(processor, tokenizer):
+def load_validation_data(processor, tokenizer,
+validation_subset_paths = config["validation_subset_paths"],
+token_conversion_dict = config["token_conversion_dict"],
+validation_samples_per_language= config['validation_samples_per_language']):
 
-    validation_subsets = processor.load_datasets(config['validation_subset_paths'], 
-                                                    config["token_conversion_dict"],
-                                                validation_cutoff = config['validation_samples_per_language'],
+    validation_subsets = processor.load_datasets(validation_subset_paths, 
+                                                    token_conversion_dict,
+                                                validation_cutoff = validation_samples_per_language,
                                                 mode = "cutoff_maximum")
         
 
@@ -49,11 +57,14 @@ def load_validation_data(processor, tokenizer):
 
     return validation_data
 
-def load_testing_data(processor, tokenizer):
+def load_testing_data(processor, tokenizer,
+testing_subset_paths = config['testing_subset_paths'],
+token_conversion_dict = config["token_conversion_dict"],
+testing_samples_per_language = config['testing_samples_per_language']):
 
-    testing_subsets = processor.load_datasets(config['testing_subset_paths'], 
-                                                    config["token_conversion_dict"],
-                                                validation_cutoff = config['testing_samples_per_language'],
+    testing_subsets = processor.load_datasets(testing_subset_paths, 
+                                                    token_conversion_dict,
+                                                validation_cutoff = testing_samples_per_language,
                                                 mode = "cutoff_maximum")
         
 
@@ -67,31 +78,39 @@ def load_testing_data(processor, tokenizer):
 
 
 #FIXME processor class
-def load_raw_text(data= "test", scarebleu = True):
+def load_raw_text(data= "test", scarebleu = True,
+train_data_dir = config["data_dir"],
+training_samples_per_language = config['training_samples_per_language']
+validation_data_dir = config["data_dir"],
+validation_samples_per_language = config['validation_samples_per_language']
+test_data_dir = config["data_dir"]
+test_samples_per_language = config['test_samples_per_language'],
+eval_languages = config['eval_languages']):
+
     sources = {}
     references = {}
     sacrereferences = {}
     
-    if data == "test":
-        data_dir = config["train_data_dir"]
-        N = config['training_samples_per_language']
+    if data == "train":
+        data_dir = train_data_dir
+        N = training_samples_per_language
 
     elif data == "validation":
-        data_dir = config["validation_data_dir"]
-        N = config['validation_samples_per_language']
+        data_dir = validation_data_dir
+        N = validation_samples_per_language
 
     elif data == "test":
-        data_dir = config["test_data_dir"]
-        N = config['test_samples_per_language']
+        data_dir = test_data_dir
+        N = test_samples_per_language
 
-    for language in config['eval_languages']:
+    for language in eval_languages:
         sources[language] = _file_to_list(
-            os.path.join(config['test_data_dir'] + f'test_{language}.src') )
+            os.path.join(data_dir + f'test_{language}.src') )
         sources[language] = [source_language_token[language] + ' ' + s
                             for s in sources[language]]
         sources[language] = sources[language][:N]
         references[language] = _file_to_list(
-             os.path.join(config['test_data_dir'] + f'test_{language}.tgt') )
+             os.path.join(data_dir + f'test_{language}.tgt') )
         references[language] = [source_language_token['en'] + ' ' + s
                                 for s in references[language]]
         references[language] = references[language][:N]

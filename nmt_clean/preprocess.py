@@ -56,7 +56,10 @@ class Processor():
         return list_of_pairs
 
     @staticmethod
-    def preprocess(examples, tokenizer):
+    def preprocess(examples, tokenizer,
+    max_input_length = config['max_input_length'],
+    max_target_length = config['max_target_length'],
+    teacher_forcing = True ):
         normalizer = sacremoses.MosesPunctNormalizer()
         inputs = [ex["src"] for ex in examples['translation']]
         targets = [ex["tgt"] for ex in examples['translation']]
@@ -67,13 +70,14 @@ class Processor():
                 for text in targets]
         
         model_inputs = tokenizer(
-            inputs, max_length=config['max_input_length'], truncation=True)
+            inputs, max_length=max_input_length, truncation=True)
 
         with tokenizer.as_target_tokenizer():
             labels = tokenizer(
-                targets, max_length=config['max_target_length'], truncation=True)
+                targets, max_length=max_target_length, truncation=True)
 
-        model_inputs["labels"] = labels["input_ids"]
+        if teacher_forcing: #right? 
+            model_inputs["labels"] = labels["input_ids"]
 
         return model_inputs
 
@@ -87,7 +91,10 @@ class Processor():
 class M21RawTextProcessor(Processor):
             
     
-    def preprocess(pairs_list, N, sacrebleu=True):
+    def preprocess(pairs_list, N, sacrebleu=True,
+    #language_token_dict= config["language_token_dict"],
+    token_conversion_dict = config["token_conversion_dict"],
+    eval_languages = config['eval_languages']):
         """
         N: Samples per language, assuming languages are in the order found in config["eval_languages"]
         """
@@ -97,15 +104,15 @@ class M21RawTextProcessor(Processor):
         sacrereferences = {}
 
         datasets_list =  self.load_datasets( pairs_list, 
-            config["language_token_dict"], 
+            token_conversion_dict, 
             validation_cutoff = N,mode = "cutoff_maximum")
 
         datasets_to_display = datasets.concatenate_datasets(datasets_list)
 
-        for language, idx_begin in zip(config['eval_languages'], range(0,len(datasets_to_display),N) ):
-            language_tokem = config["token_conversion_dict"][language]
+        for language, idx_begin in zip(eval_languages, range(0,len(datasets_to_display),N) ):
+            language_token = token_conversion_dict[language]
             sources[language] = [ text_pair["src"] for text_pair in datasets_to_display["translation"][idx_begin:idx_begin+N] ]
-            sources[language] = [language_tokem + ' ' + s
+            sources[language] = [language_token + ' ' + s
                                 for s in sources[language]]
             references[language] = [ text_pair["tgt"] for text_pair in datasets_to_display["translation"][idx_begin:idx_begin+N] ]
             
