@@ -33,13 +33,13 @@ quantization_config = PostTrainingQuantConfig(approach="static")
 quantizer = INCQuantizer.from_pretrained(main_model)
 
 
-pruning_config = WeightPruningConfig(
-    pruning_type="magnitude",
-    start_step=0,
-    end_step=15,
-    target_sparsity=0.2,
-    pruning_scope="local",
-)
+#pruning_config = WeightPruningConfig(
+#    pruning_type="magnitude",
+ #   start_step=0,
+ #   end_step=15,
+ #   target_sparsity=0.2,
+  #  pruning_scope="local",
+#)
 quantization_config = QuantizationAwareTrainingConfig()
 
 
@@ -52,7 +52,7 @@ trainer = INCSeq2SeqTrainer(
     main_model,
     config['train_settings'],
     quantization_config = quantization_config,
-    pruning_config = pruning_config,
+    #pruning_config = pruning_config,
     #distillation_config = ,
     train_dataset = validation_dataset,
     eval_dataset = test_dataset,

@@ -25,7 +25,7 @@ config = {
     'front_translation_training_data': False, #not implemented
     'named_entities_training_data': False,
     'recycle_language_tokens': True,
-    'google_back_translation': True,
+    'google_back_translation': False,
     'oversample_rate': 5,
     'oversample_in_domain': True
 }
@@ -53,7 +53,7 @@ eval_steps_interval = 20#4 * max(1, int(eval_steps_interval / 10))
 print(f'Evaluating every {eval_steps_interval} training steps.')
 
 config['train_settings'] = transformers.Seq2SeqTrainingArguments(
-    f'output-{config["language_pair"]}',
+    f'quantized-{config["language_pair"]}',
     evaluation_strategy = 'steps',
     eval_steps = eval_steps_interval,
     save_steps = eval_steps_interval,
@@ -221,10 +221,10 @@ if config["google_back_translation"]:
             "path":config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.src"
         }
     }
-    config['training_subset_ids'].append(google_bt)
+    config['trainingtraining_subset_paths_subset_ids'].append(google_bt)
 
 if config["oversample_in_domain"]:
-    config['training_subset_ids'] = config['training_subset_ids'] * config["oversample_rate"]
+    config['training_subset_paths'] = config['training_subset_paths'] * config["oversample_rate"]
 
 
 if config['mt560_training_data']:
