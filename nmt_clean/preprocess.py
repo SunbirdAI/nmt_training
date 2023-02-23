@@ -2,6 +2,7 @@ import datasets
 import sacremoses
 
 from nmt_clean.config import config 
+from tqdm import tqdm
 
 def sentence_format(input):
      '''Ensure capital letter at the start and full stop at the end.'''
@@ -91,7 +92,7 @@ class Processor():
 class M21RawTextProcessor(Processor):
             
     
-    def preprocess(pairs_list, N, sacrebleu=True,
+    def preprocess(self,pairs_list, N, sacrebleu=True,
     #language_token_dict= config["language_token_dict"],
     token_conversion_dict = config["token_conversion_dict"],
     eval_languages = config['eval_languages']):
@@ -174,3 +175,96 @@ class Many2OneProcessor(Processor):
             tokenizer.src_lang = ""
             tokenizer.tgt_lang = ""
             return super(Many2OneProcessor, Many2OneProcessor).preprocess(examples, tokenizer)
+
+
+class Many2ManyProcessor(Processor):
+
+
+    """
+    Many2ManyProcessor adds the src language token to the beginning of the src sentences, and the tgt token 
+    """
+    @classmethod
+    def _generate_pair_dataset(cls, src_path,src_language, tgt_path, tgt_language, validation_cutoff =0, mode="cutoff_minimum"):
+        src_scentences = cls.load_files(src_path)
+        tgt_scentences = cls.load_files(tgt_path)
+
+
+        if validation_cutoff:
+            if mode == "cutoff_maximum":
+                src_scentences = src_scentences[:validation_cutoff]
+                tgt_scentences = tgt_scentences[:validation_cutoff]
+            elif mode == "cutoff_minimum":
+                src_scentences = src_scentences[validation_cutoff:]
+                tgt_scentences = tgt_scentences[validation_cutoff:]
+
+        #TODO add tokens from tokenizer
+        #src_scentences = [language_token_dict[src_language] + " " + src for src in src_scentences]
+        #tgt_scentences = [language_token_dict[tgt_language] + " " + tgt for tgt in tgt_scentences]
+
+
+        pairs = {'translation': [{"src": s,
+                            "tgt": t}
+                            for s, t in zip(src_scentences, tgt_scentences)],
+        }
+        paired_dataset = datasets.Dataset.from_dict(pairs)
+        paired_dataset.src_language = src_language
+        paired_dataset.tgt_language = tgt_language
+        
+        return paired_dataset
+    
+    @classmethod
+    def dataset_from_folders_m2m(cls,pair_dict, validation_cutoff = 0,mode = "cutoff_maximum"):
+
+        list_of_paired_datasets = []
+        for src_language in tqdm(pair_dict.keys()):
+            for tgt_language in pair_dict[src_language].keys():
+                if tgt_language == "all":
+                    ### Get all other pairs for the same indicies
+                    
+                    for other_tgt_language in pair_dict.keys():
+                        if other_tgt_language == src_language:
+                            continue
+
+                        for idx in range(len(pair_dict[src_language][tgt_language])):
+                            src_path = pair_dict[src_language]["all"][idx]
+                            tgt_path = pair_dict[other_tgt_language]["all"][idx]
+                        
+                            paired_dataset = cls._generate_pair_dataset(src_path,src_language, tgt_path, other_tgt_language, validation_cutoff = validation_cutoff, mode=mode)
+                            list_of_paired_datasets.append(paired_dataset)
+                    continue
+                for idx in range(len(pair_dict[src_language][tgt_language])):
+                    src_path = pair_dict[src_language][tgt_language][idx]
+                    tgt_path = pair_dict[tgt_language][src_language][idx]
+                    paired_dataset = cls._generate_pair_dataset(src_path,src_language, tgt_path, tgt_language, validation_cutoff = validation_cutoff, mode=mode)
+                    list_of_paired_datasets.append(paired_dataset)
+
+        return list_of_paired_datasets
+
+
+    @staticmethod
+    def iterative_preprocess(paired_datasets, tokenizer):
+        tokenized_datasets = []
+        for dataset_to_tokenize in tqdm(paired_datasets):
+            tokenizer.src_lang = dataset_to_tokenize.src_language
+            tokenizer.tgt_lang = dataset_to_tokenize.tgt_language
+            tokenized_datasets.append(super(Many2OneProcessor, Many2OneProcessor).preprocess(dataset_to_tokenize, tokenizer))
+        return tokenized_datasets
+
+
+"""
+tokenizer.src_lang = "ar_AR"
+encoded_ar = tokenizer(article_ar, return_tensors="pt")
+generated_tokens = model.generate(
+    **encoded_ar,
+    forced_bos_token_id=tokenizer.lang_code_to_id["en_XX"]
+)
+
+#def tokenizer_call
+#tokenizer_to)many2many(tokenizer):
+
+    
+
+class Many2ManyProcessor():
+
+    def
+"""

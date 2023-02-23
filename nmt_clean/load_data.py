@@ -3,6 +3,8 @@ import numpy as np
 
 from nmt_clean.config import config 
 
+
+## TODO either class these functions or combine them into 1 function
 def load_training_data(processor, tokenizer,
 training_subset_paths = config['training_subset_paths'],
 token_conversion_dict = config["token_conversion_dict"],
