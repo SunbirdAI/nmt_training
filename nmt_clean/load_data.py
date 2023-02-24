@@ -82,11 +82,11 @@ testing_samples_per_language = config['testing_samples_per_language']):
 #FIXME processor class
 def load_raw_text(data= "test", scarebleu = True,
 train_data_dir = config["data_dir"],
-training_samples_per_language = config['training_samples_per_language']
+#training_samples_per_language = config['training_samples_per_language'],
 validation_data_dir = config["data_dir"],
-validation_samples_per_language = config['validation_samples_per_language']
-test_data_dir = config["data_dir"]
-test_samples_per_language = config['test_samples_per_language'],
+validation_samples_per_language = config['validation_samples_per_language'],
+test_data_dir = config["data_dir"],
+test_samples_per_language = config['testing_samples_per_language'],
 eval_languages = config['eval_languages']):
 
     sources = {}
@@ -95,7 +95,7 @@ eval_languages = config['eval_languages']):
     
     if data == "train":
         data_dir = train_data_dir
-        N = training_samples_per_language
+        N = 0
 
     elif data == "validation":
         data_dir = validation_data_dir

@@ -4,7 +4,7 @@
 config = {
     'flores101_training_data': True,
     'mt560_training_data': True,
-    'back_translation_training_data': False,
+    'back_translation_training_data': True,
     'front_translation_training_data': False, #not implemented
     'named_entities_training_data': False,
     'recycle_language_tokens': True,
@@ -112,8 +112,10 @@ if config["google_back_translation"]:
         config['training_subset_paths']["en"]["lug"].append(config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.tgt")
 
 #TODO adjust        
-#if config["oversample_in_domain"]:
-    #config['training_subset_paths'] = config['training_subset_paths'] * config["oversample_rate"]
+if config["oversample_in_domain"]:
+    for src_lang in config['training_subset_paths'].keys():
+        for tgt_lang in config['training_subset_paths'][src_lang].keys():
+            config['training_subset_paths'][src_lang][tgt_lang] = config['training_subset_paths'][src_lang][tgt_lang] * config["oversample_rate"]
     #redo oversampling
 
 if config['mt560_training_data']:

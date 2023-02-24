@@ -34,10 +34,10 @@ config['language_pair'] = f'salt-en'
 config['wandb_project'] = f'salt-mbart'
 config['wandb_entity'] = f'sunbird'
 
-config['model_checkpoint'] = f'/content/mBART_weights/best_mBART_salt'
+config['model_checkpoint'] = f'/home/ali/Documents/repos/nmt_checkpoints/mul_en_kaggle_hf_1-2/output-mul-en/checkpoint-400'
 
 # What training data to use
-config['data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
+config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/v7.0/supervised/mul-en/'
 #config['training_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 #config['validation_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 #config['test_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'

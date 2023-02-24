@@ -184,7 +184,8 @@ class Many2ManyProcessor(Processor):
     Many2ManyProcessor adds the src language token to the beginning of the src sentences, and the tgt token 
     """
     @classmethod
-    def _generate_pair_dataset(cls, src_path,src_language, tgt_path, tgt_language, validation_cutoff =0, mode="cutoff_minimum"):
+    def _generate_pair_dataset(cls, src_path,src_language, tgt_path, tgt_language, validation_cutoff =0, mode="cutoff_minimum", marian_style_tokens = True):
+
         src_scentences = cls.load_files(src_path)
         tgt_scentences = cls.load_files(tgt_path)
 
@@ -198,8 +199,9 @@ class Many2ManyProcessor(Processor):
                 tgt_scentences = tgt_scentences[validation_cutoff:]
 
         #TODO add tokens from tokenizer
-        #src_scentences = [language_token_dict[src_language] + " " + src for src in src_scentences]
-        #tgt_scentences = [language_token_dict[tgt_language] + " " + tgt for tgt in tgt_scentences]
+        if marian_style_tokens:
+            src_scentences = [tgt_language + " " + src for src in src_scentences]
+            #tgt_scentences = [language_token_dict[tgt_language] + " " + tgt for tgt in tgt_scentences]
 
 
         pairs = {'translation': [{"src": s,
@@ -242,11 +244,13 @@ class Many2ManyProcessor(Processor):
 
 
     @staticmethod
-    def iterative_preprocess(paired_datasets, tokenizer):
+    def iterative_preprocess(paired_datasets, tokenizer, mbart_style_tokens = True):
         tokenized_datasets = []
         for dataset_to_tokenize in tqdm(paired_datasets):
-            tokenizer.src_lang = dataset_to_tokenize.src_language
-            tokenizer.tgt_lang = dataset_to_tokenize.tgt_language
+            if mbart_style_tokens:
+                tokenizer.src_lang = "" # or src_language?            
+                tokenizer.tgt_lang = ""
+           
             tokenized_datasets.append(super(Many2OneProcessor, Many2OneProcessor).preprocess(dataset_to_tokenize, tokenizer))
         return tokenized_datasets
 
