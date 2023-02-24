@@ -240,7 +240,7 @@ if config['back_translation_training_data']:
         }
     }
     ]
-    config['training_subset_paths'].extend(googlscrape_bte_bt)
+    config['training_subset_paths'].extend(scrape_bt)
 
 
 if config["google_back_translation"]:
