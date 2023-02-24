@@ -206,9 +206,42 @@ if config['flores101_training_data']:
 #config['training_subset_ids'] = config['training_subset_ids'] * 5
 # Will oversample from interleave datasets
 
-#if config['back_translation_training_data']:
-#     raise NotImplementedError("Have not split bt data by language yet")
-#     config['training_subset_ids'].append('back_translated')
+if config['back_translation_training_data']:
+     raise NotImplementedError("Have not split bt data by language yet")
+    scrape_bt = [
+    {
+        "source":{
+            "language":"ach",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_ach.src"
+        },
+        "target":{
+            "language":"en",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_ach.tgt"
+        }
+    },
+    {
+        "source":{
+            "language":"lug",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_lug.src"
+        },
+        "target":{
+            "language":"en",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_lug.tgt"
+        }
+    },
+    {
+        "source":{
+            "language":"teo",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_teo.src"
+        },
+        "target":{
+            "language":"en",
+            "path":config['data_dir'] + "v7.0/supervised/mul-en/back_translate_teo.tgt"
+        }
+    }
+    ]
+    config['training_subset_paths'].extend(googlscrape_bte_bt)
+
 
 if config["google_back_translation"]:
     google_bt = {

@@ -95,6 +95,17 @@ if config['flores101_training_data']:
 #Get them by matching indicies
 # fragile but works
 # I guess we need some tests
+
+if config["back_translation_training_data"]:
+
+        config['training_subset_paths']["ach"]["en"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_ach.src")
+        config['training_subset_paths']["en"]["ach"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_ach.tgt")
+        config['training_subset_paths']["lug"]["en"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_lug.src")
+        config['training_subset_paths']["en"]["lug"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_lug.tgt")
+        config['training_subset_paths']["teo"]["en"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_teo.src")
+        config['training_subset_paths']["en"]["teo"].append(config['data_dir'] + "v7.0/supervised/mul-en/back_translate_teo.tgt")
+
+
 if config["google_back_translation"]:
 
         config['training_subset_paths']["lug"]["en"].append(config['data_dir'] + "v7.0/supervised/mul-en/bukedde_ggl_bt_lug.src")
@@ -141,4 +152,4 @@ else:
         "en": 'en'
         
      }
-    raise NotImplementedError("Code to add tokens and resize embedding layer not added")
+    #raise NotImplementedError("Code to add tokens and resize embedding layer not added")
