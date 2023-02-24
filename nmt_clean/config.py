@@ -207,7 +207,7 @@ if config['flores101_training_data']:
 # Will oversample from interleave datasets
 
 if config['back_translation_training_data']:
-     raise NotImplementedError("Have not split bt data by language yet")
+    
     scrape_bt = [
     {
         "source":{
