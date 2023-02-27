@@ -21,11 +21,12 @@ config = {
     'label_smoothing_factor': 0.1,
     'flores101_training_data': True,
     'mt560_training_data': True,
-    'back_translation_training_data': False,
+    'ai4d_training_data': True,
+    'back_translation_training_data': True,
+    'google_back_translation': True,
     'front_translation_training_data': False, #not implemented
     'named_entities_training_data': False,
     'recycle_language_tokens': True,
-    'google_back_translation': False,
     'oversample_rate': 5,
     'oversample_in_domain': True
 }
@@ -311,5 +312,14 @@ if config["recycle_language_tokens"]:
         
      }
 else:
-    raise NotImplementedError("Code to add tokens and resize embedding layer not added")
-    # If you want to add it refer to https://www.depends-on-the-definition.com/how-to-add-new-tokens-to-huggingface-transformers/
+    config["token_conversion_dict"] = {
+        "teo": 'teo' ,
+        "ach": 'ach',
+        "lug": 'lug',
+        "lgg": 'lgg',
+        "nyn": 'nyn',
+        "en": 'en'
+     }
+
+    config["SALT_LANGUAGE_CODES"] = ["ach", "lgg", "lug", "en", "nyn", "teo"]
+

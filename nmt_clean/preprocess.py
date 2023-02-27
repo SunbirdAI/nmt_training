@@ -5,11 +5,15 @@ from nmt_clean.config import config
 from tqdm import tqdm
 
 def sentence_format(input):
-     '''Ensure capital letter at the start and full stop at the end.'''
-     input = input[0].capitalize() + input[1:]
-     if input[-1] not in ['.', '!', '?']:
-         input = input + '.'
-     return input
+    if input == "":
+        print("empty string")
+        return ""
+    '''Ensure capital letter at the start and full stop at the end.'''
+    input = input[0].capitalize() + input[1:]
+    if input[-1] not in ['.', '!', '?']:
+        input = input + '.'
+
+    return input
     
 
 class Processor():
@@ -251,7 +255,7 @@ class Many2ManyProcessor(Processor):
                 tokenizer.src_lang = "" # or src_language?            
                 tokenizer.tgt_lang = ""
            
-            tokenized_datasets.append(super(Many2OneProcessor, Many2OneProcessor).preprocess(dataset_to_tokenize, tokenizer))
+            tokenized_datasets.append(super(Many2ManyProcessor, Many2ManyProcessor).preprocess(dataset_to_tokenize, tokenizer))
         return tokenized_datasets
 
 
