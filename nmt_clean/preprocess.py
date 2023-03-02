@@ -18,9 +18,7 @@ def sentence_format(input):
 
 class Processor():
 
-    def __init__(self, tokenizer):
-        self.tokenizer = tokenizer
-
+   
 
     @staticmethod
     def load_files(path_to_file):
