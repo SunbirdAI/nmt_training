@@ -7,7 +7,7 @@ from tqdm import tqdm
 def sentence_format(input):
     if input == "":
         print("empty string")
-        return ""
+        return "empty string"
     '''Ensure capital letter at the start and full stop at the end.'''
     input = input[0].capitalize() + input[1:]
     if input[-1] not in ['.', '!', '?']:
@@ -17,6 +17,10 @@ def sentence_format(input):
     
 
 class Processor():
+
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+
 
     @staticmethod
     def load_files(path_to_file):
@@ -60,14 +64,24 @@ class Processor():
 
         return list_of_pairs
 
+
+    def attach_tokenizer(self, tokenizer):
+        def preprocess_w_tokenizer(examples, tokenizer = tokenizer):
+            return self.preprocess(examples, tokenizer)
+
+        return preprocess_w_tokenizer
+    
     @staticmethod
     def preprocess(examples, tokenizer,
     max_input_length = config['max_input_length'],
     max_target_length = config['max_target_length'],
     teacher_forcing = True ):
         normalizer = sacremoses.MosesPunctNormalizer()
-        inputs = [ex["src"] for ex in examples['translation']]
-        targets = [ex["tgt"] for ex in examples['translation']]
+        try:
+            inputs = [ex["src"] for ex in examples['translation']]
+            targets = [ex["tgt"] for ex in examples['translation']]
+        except:
+            import pdb;pdb.set_trace()
 
         inputs = [sentence_format(normalizer.normalize(text))
                 for text in inputs]
@@ -246,6 +260,8 @@ class Many2ManyProcessor(Processor):
 
         return list_of_paired_datasets
 
+    
+
 
     @staticmethod
     def iterative_preprocess(paired_datasets, tokenizer, mbart_style_tokens = True):
@@ -255,7 +271,10 @@ class Many2ManyProcessor(Processor):
                 tokenizer.src_lang = "" # or src_language?            
                 tokenizer.tgt_lang = ""
            
-            tokenized_datasets.append(super(Many2ManyProcessor, Many2ManyProcessor).preprocess(dataset_to_tokenize, tokenizer))
+            preprocess_function = super(Many2ManyProcessor, Many2ManyProcessor).preprocess
+            tokenized_dataset = dataset_to_tokenize.map(preprocess_function, remove_columns=["translation"], batched=False)
+            tokenized_datasets.append(tokenized_dataset)
+        
         return tokenized_datasets
 
 
