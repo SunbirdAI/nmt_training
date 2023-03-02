@@ -67,13 +67,58 @@ config['training_subset_paths'] = {
     
 ## All pairwise
 config['validation_subset_paths'] = {
-            "ach":[config['data_dir'] + "v7.0/supervised/en-ach/val.ach"],
-            "en": [config['data_dir'] + "v7.0/supervised/en-lug/val.en"],
-            "lgg":[config['data_dir'] + "v7.0/supervised/en-lgg/val.lgg"],
-            "lug":[config['data_dir'] + "v7.0/supervised/en-lug/val.lug"],
-            "nyn":[config['data_dir'] + "v7.0/supervised/en-nyn/val.nyn"],
-            "teo":[config['data_dir'] + "v7.0/supervised/en-teo/val.teo"]
+            "ach":{
+                "all":[config['data_dir'] + "v7.0/supervised/en-ach/val.ach"],
+                "en":[],
+                "lgg":[],
+                "lug":[],
+                "nyn":[],
+                "teo":[]
+            },
+            "en": {
+                "all":[config['data_dir'] + "v7.0/supervised/en-lug/val.en"],
+                "ach":[],
+                "lgg":[],
+                "lug":[],
+                "nyn":[],
+                "teo":[]
+            },
+            "lgg":{
+                "all":[config['data_dir'] + "v7.0/supervised/en-lgg/val.lgg"],
+                "en":[],
+                "ach":[],
+                "lug":[],
+                "nyn":[],
+                "teo":[]
+            },
+            "lug":{
+                "all":[config['data_dir'] + "v7.0/supervised/en-lug/val.lug"],
+                "en":[],
+                "lgg":[],
+                "ach":[],
+                "nyn":[],
+                "teo":[]
+            },
+            "nyn":{
+                "all":[config['data_dir'] + "v7.0/supervised/en-nyn/val.nyn"],
+                "en":[],
+                "lgg":[],
+                "lug":[],
+                "ach":[],
+                "teo":[]
+            },
+            "teo":{
+                "all":[config['data_dir'] + "v7.0/supervised/en-teo/val.teo"],
+                "en":[],
+                "lgg":[],
+                "lug":[],
+                "nyn":[],
+                "ach":[]
+            }
 }
+
+
+
 
 
 # All pairwise
