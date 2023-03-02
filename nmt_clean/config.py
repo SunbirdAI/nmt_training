@@ -1,6 +1,12 @@
 import torch
 import transformers
 
+
+
+
+## Merge the dataset creation and the tokenization into one step. This would allow the function to assign different source languages 
+## per subset to the tokenizer. 
+
 # Parameters for mul-en models
 config = {
     'source_languages': ["ach", "lgg", "lug", "nyn", "teo"],
@@ -11,7 +17,7 @@ config = {
     'max_input_length': 128,
     'max_target_length': 128,
     'validation_samples_per_language': 100,
-    'testing_samples_per_language': 100,
+    'testing_samples_per_language': 500,
     'validation_train_merge': True,
     'eval_batch_size': 1,
     'eval_languages': ["ach", "lgg", "lug", "nyn", "teo"],
@@ -38,7 +44,7 @@ config['wandb_entity'] = f'sunbird'
 config['model_checkpoint'] = f'/home/ali/Documents/repos/nmt_checkpoints/mul_en_kaggle_hf_1-2/output-mul-en/checkpoint-400'
 
 # What training data to use
-config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/v7.0/supervised/mul-en/'
+config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/'
 #config['training_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 #config['validation_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
 #config['test_data_dir'] = f'v7-dataset/v7.0/supervised/mul-en/'
@@ -184,6 +190,7 @@ config['testing_subset_paths'] = [
         }
     
    ]
+
 
 #why not luo?
 if config['flores101_training_data']:

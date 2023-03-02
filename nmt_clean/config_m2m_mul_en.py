@@ -121,15 +121,41 @@ config['validation_subset_paths'] = {
 
 
 
-# All pairwise
-config['testing_subset_paths'] = {
-            "ach":[config['data_dir'] + "v7.0/supervised/en-ach/test.ach"],
-            "en": [config['data_dir'] + "v7.0/supervised/en-lug/test.en"],
-            "lgg":[config['data_dir'] + "v7.0/supervised/en-lgg/test.lgg"],
-            "lug":[config['data_dir'] + "v7.0/supervised/en-lug/test.lug"],
-            "nyn":[config['data_dir'] + "v7.0/supervised/en-nyn/test.nyn"],
-            "teo":[config['data_dir'] + "v7.0/supervised/en-teo/test.teo"]
+config['testing_subset_paths'] = [
+        
+        {
+            "source":{"language":"ach",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_ach.src"},
+            "target":{"language":"en",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_ach.tgt"} 
+        },
+        {
+            "source":{"language":"lgg",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_lgg.src"},
+            "target":{"language":"en",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_lgg.tgt"} 
+        },
+        {
+            "source":{"language":"lug",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_lug.src"},
+            "target":{"language":"en",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_lug.tgt"} 
+        },
+        {
+            "source":{"language":"nyn",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_nyn.src"},
+            "target":{"language":"en",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_nyn.tgt"} 
+        },
+        {
+            "source":{"language":"teo",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_teo.src"},
+            "target":{"language":"en",
+                   "path":config['data_dir'] + "v7.0/supervised/mul-en/test_teo.tgt"} 
         }
+    
+   ]
+
 
 #why not luo?
 if config['flores101_training_data']:
