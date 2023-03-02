@@ -112,6 +112,7 @@ class M21RawTextProcessor(Processor):
     
     def preprocess(self,pairs_list, N, sacrebleu=True,
     #language_token_dict= config["language_token_dict"],
+    tgt_tokens_in_src = False,
     token_conversion_dict = config["token_conversion_dict"],
     eval_languages = config['eval_languages']):
         """
@@ -129,17 +130,25 @@ class M21RawTextProcessor(Processor):
         datasets_to_display = datasets.concatenate_datasets(datasets_list)
 
         for language, idx_begin in zip(eval_languages, range(0,len(datasets_to_display),N) ):
-            language_token = token_conversion_dict[language]
+            if tgt_tokens_in_src:
+                language_token = token_conversion_dict[language]
             sources[language] = [ text_pair["src"] for text_pair in datasets_to_display["translation"][idx_begin:idx_begin+N] ]
-            sources[language] = [language_token + ' ' + s
-                                for s in sources[language]]
+            if tgt_tokens_in_src:
+                sources[language] = [language_token + ' ' +
+                                s for s in sources[language]
+                                ]
+            else:
+                sources[language] = [#language_token + ' ' +
+                                s for s in sources[language]
+                                ]
             references[language] = [ text_pair["tgt"] for text_pair in datasets_to_display["translation"][idx_begin:idx_begin+N] ]
             
             
-        if sacrebleu:
-            sacrereferences[language] = [ [s]
+            if sacrebleu:
+                sacrereferences[language] = [ [s]
                                     for s in references[language]]
             
+        if sacrebleu:
             return sources, references, sacrereferences
             
         return sources, references
