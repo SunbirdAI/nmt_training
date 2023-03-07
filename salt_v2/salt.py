@@ -8,6 +8,7 @@ def translation_dataset(
     source_language,
     target_language,
     allow_target_language_in_source = True,
+    prefix_target_language_in_source = False,
     languages_to_include = None):
     '''Creates a translation dataset from a SALT v2 format source file.
  
@@ -32,6 +33,9 @@ def translation_dataset(
             the same language code for both source and target. For example, in
             many-to-English translation, can there be any records with source
             text also in English (default True).
+        prefix_target_language_in_source: In the case of one-to-many and 
+            many-to-many models where a prefixed language token can guide
+            the model to know which language to generate as an output. (default: False)
         languages_to_include: If non-empty, a list of language codes
             that can be included in 'many'. Any text not in these languages will
             be ignored (Optional).
@@ -83,8 +87,11 @@ def translation_dataset(
                     continue
                 if row_source_language not in item:
                     continue
-
-                dataset['source'].append(item[row_source_language])
+                
+                if prefix_target_language_in_source:
+                    dataset['source'].append(f">>{row_target_language}<< " + item[row_source_language])
+                else:
+                    dataset['source'].append(item[row_source_language])
                 dataset['target'].append(item[row_target_language])
                 dataset['source_language'].append(row_source_language)
                 dataset['target_language'].append(row_target_language)
