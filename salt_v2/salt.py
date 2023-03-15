@@ -101,7 +101,7 @@ def translation_dataset(
                     if type(source_sentences) == str:
                         source_sentences = [source_sentences]
                 else: 
-                    source_sentences = [source_sentences]
+                    source_sentences = [source_sentence]
                 
 
                 if len(dataset_prefixes) > 0:
