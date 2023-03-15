@@ -97,9 +97,12 @@ def translation_dataset(
                 source_sentence = item[row_source_language]
                 if source_augmenter is not None:
                     source_sentences = source_augmenter(source_sentence)
-
-                if type(source_sentences) == str:
+                    
+                    if type(source_sentences) == str:
+                        source_sentences = [source_sentences]
+                else: 
                     source_sentences = [source_sentences]
+                
 
                 if len(dataset_prefixes) > 0:
                     for prefix in dataset_prefixes: 
