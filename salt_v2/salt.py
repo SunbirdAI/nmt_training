@@ -2,14 +2,14 @@
 import json
 import datasets
 
-
 def translation_dataset(
     path,
     source_language,
     target_language,
     allow_target_language_in_source = True,
     prefix_target_language_in_source = False,
-    languages_to_include = None):
+    languages_to_include = None,
+    dataset_prefixes = None  ):
     '''Creates a translation dataset from a SALT v2 format source file.
  
     Various translation tasks, such as many-to-one and many-to-many, are catered
@@ -39,6 +39,9 @@ def translation_dataset(
         languages_to_include: If non-empty, a list of language codes
             that can be included in 'many'. Any text not in these languages will
             be ignored (Optional).
+        dataset_prefixes: If non-empty, a list of dataset specific tokens to prepend to 
+            sentences in the dataset. Ex. Backtranslation token, Out of domain token. 
+            If used make sure to add the desired tokens to the tokenizer (Optional)
             
     Returns:
         dataset: A datasets.Dataset object with attributes `source`, `target`,
@@ -80,6 +83,7 @@ def translation_dataset(
 
         for row_source_language in source_languages:
             for row_target_language in target_languages:
+                
                 if (row_source_language == row_target_language
                     and not allow_target_language_in_source):
                     continue
@@ -88,10 +92,18 @@ def translation_dataset(
                 if row_source_language not in item:
                     continue
                 
+                source_sentence = item[row_source_language]
+
+                if len(dataset_prefixes) > 0:
+                    for prefix in dataset_prefixes: 
+                        source_sentence = prefix + " " + source_sentence
+                
                 if prefix_target_language_in_source:
-                    dataset['source'].append(f">>{row_target_language}<< " + item[row_source_language])
-                else:
-                    dataset['source'].append(item[row_source_language])
+                    source_sentence = f">>{row_target_language}<<" + " " + source_sentence
+                
+                
+                dataset['source'].append(source_sentence)
+                
                 dataset['target'].append(item[row_target_language])
                 dataset['source_language'].append(row_source_language)
                 dataset['target_language'].append(row_target_language)
