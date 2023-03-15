@@ -9,7 +9,7 @@ def translation_dataset(
     allow_target_language_in_source = True,
     prefix_target_language_in_source = False,
     languages_to_include = None,
-    dataset_prefixes = None  ):
+    dataset_prefixes = []]  ):
     '''Creates a translation dataset from a SALT v2 format source file.
  
     Various translation tasks, such as many-to-one and many-to-many, are catered
