@@ -9,7 +9,9 @@ def translation_dataset(
     allow_target_language_in_source = True,
     prefix_target_language_in_source = False,
     languages_to_include = None,
-    dataset_prefixes = []  ):
+    dataset_prefixes = [],
+    source_augmenter = None,
+    target_augmenter = None ):
     '''Creates a translation dataset from a SALT v2 format source file.
  
     Various translation tasks, such as many-to-one and many-to-many, are catered
@@ -93,20 +95,35 @@ def translation_dataset(
                     continue
                 
                 source_sentence = item[row_source_language]
+                if source_augmenter is not None:
+                    source_sentences = source_augmenter(source_sentence)
+
+                if type(source_sentences) == str:
+                    source_sentences = [source_sentences]
 
                 if len(dataset_prefixes) > 0:
                     for prefix in dataset_prefixes: 
-                        source_sentence = prefix + " " + source_sentence
+                        source_sentences = [prefix + " " + source_sentence for source_sentence in source_sentences]
                 
                 if prefix_target_language_in_source:
-                    source_sentence = f">>{row_target_language}<<" + " " + source_sentence
+                    source_sentence = [f">>{row_target_language}<<" + " " + source_sentence for source_sentence in source_sentences]
                 
+                target_sentence = item[row_target_language]
+                if target_augmenter is not None:
+                    raise NotImplementedError("Sampling target sentences not implemented")
+                    #target_sentences = source_augmenter(target_sentence)
+
+                else:
+                    target_sentences = [target_sentence] * len(source_sentences)
+                    row_source_languages = [row_source_language] * len(source_sentences)
+                    row_target_languages = [row_target_language] * len(source_sentences)
+                assert len(source_sentences) == len(target_sentences)
                 
-                dataset['source'].append(source_sentence)
+                dataset['source'].extend(source_sentences)
                 
-                dataset['target'].append(item[row_target_language])
-                dataset['source_language'].append(row_source_language)
-                dataset['target_language'].append(row_target_language)
+                dataset['target'].extend(target_sentences)
+                dataset['source_language'].extend(row_source_languages)
+                dataset['target_language'].extend(row_target_languages)
 
     if not len(dataset):
         raise ValueError('No sentence pairs were found matching the specifications '
