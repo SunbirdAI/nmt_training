@@ -104,19 +104,19 @@ def translation_dataset(
                     
                     if keep_unaugmented_src:
                         source_sentences.append(item[row_source_language])
-                        
+
                 else: 
                     source_sentences = [source_sentence]
                 
 
                 if len(dataset_prefixes) > 0:
                     for prefix in dataset_prefixes: 
-                        source_sentences = [prefix + " " + source_sentence for source_sentence in source_sentences]
+                        source_sentences = [prefix + " " + sentence for sentence in source_sentences]
                 
                     
 
                 if prefix_target_language_in_source:
-                    source_sentence = [f">>{row_target_language}<<" + " " + source_sentence for source_sentence in source_sentences]
+                    source_sentences = [f">>{row_target_language}<<" + " " + sentence for sentence in source_sentences]
                 
                 target_sentence = item[row_target_language]
                 if target_augmenter is not None:
