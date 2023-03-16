@@ -101,6 +101,10 @@ def translation_dataset(
                     
                     if type(source_sentences) == str:
                         source_sentences = [source_sentences]
+                    
+                    if keep_unaugmented_src:
+                        source_sentences.append(item[row_source_language])
+                        
                 else: 
                     source_sentences = [source_sentence]
                 
@@ -109,9 +113,8 @@ def translation_dataset(
                     for prefix in dataset_prefixes: 
                         source_sentences = [prefix + " " + source_sentence for source_sentence in source_sentences]
                 
-                if keep_unaugmented_src:
-                    source_sentences.append(item[row_source_language])
                     
+
                 if prefix_target_language_in_source:
                     source_sentence = [f">>{row_target_language}<<" + " " + source_sentence for source_sentence in source_sentences]
                 
