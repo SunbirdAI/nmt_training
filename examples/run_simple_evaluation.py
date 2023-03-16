@@ -3,9 +3,10 @@ import datasets
 import evaluate
 import transformers
 
+from nmt_clean.config import config
 from nmt_clean.evaluate import translate_one
 from nmt_clean.preprocess import Many2OneProcessor
-from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainer, EarlyStoppingCallback
 
 
 config['data_dir'] = f'/home/ali/Documents/repos/datasets/salt/v7-dataset/' #FIXME use os.path.join
@@ -21,7 +22,7 @@ processor = M21RawTextProcessor()
 test_dataset = load_validation_data(processor, tokenizer)
 
 trainer = Seq2SeqTrainer(
-    model,
+    main_model,
     config['train_settings'],
     train_dataset = None,
     eval_dataset = test_dataset,

@@ -1,0 +1,43 @@
+source_languages:
+  ach
+  lgg
+  lug
+  nyn
+  teo
+target_languages:
+  en
+metric_for_best_model: loss
+train_batch_size: 25
+gradient_accumulation_steps: 120
+max_input_length: 128
+max_target_length: 128
+validation_samples_per_language: 100
+testing_samples_per_language: 500
+validation_train_merge: true
+eval_batch_size: 20
+eval_languages:
+  ach
+  lgg
+  lug
+  nyn
+  teo
+eval_pretrained_model: false
+learning_rate: 0.0001
+num_train_epochs: 2
+label_smoothing_factor: 0.1
+flores101_training_data: true
+mt560_training_data: true
+ai4d_training_data: true
+back_translation_training_data: true
+google_back_translation: true
+front_translation_training_data: false
+named_entities_training_data: false
+recycle_language_tokens: true
+oversample_rate: 5
+oversample_in_domain: true
+
+language_pair: salt-en
+wandb_project: salt-mbart
+wandb_entity: sunbird
+model_checkpoint: /home/ali/Documents/repos/nmt_checkpoints/mul_en_kaggle_hf_1-2/output-mul-en/checkpoint-400
+data_dir: /home/ali/Documents/repos/datasets/salt/v7-dataset/
