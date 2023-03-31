@@ -1,8 +1,13 @@
-import unittest
-import salt
-import tempfile
-import shutil
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
 import pandas as pd
+import salt
+import shutil
+import tempfile
+import unittest
+
 
 class TestDataLoadingMethods(unittest.TestCase):
   def setUp(self):
